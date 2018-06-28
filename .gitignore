@@ -3,3 +3,5 @@
 /convert_string_to_int/Debug/*
 *.vcxproj.filters
 *.vcxproj.user
+*/x64/*
+x64/*

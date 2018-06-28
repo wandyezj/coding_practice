@@ -24,22 +24,22 @@ void string_to_number_test_case::print_test()
 	int output_number = 0;
 	bool return_value = string_to_number(output_number, m_input_string, m_input_base);
 
-	std::cout << "case: [" << m_input_string.c_str() << "] [" << m_input_base << "] [" << m_expected_output_number << "] [" << m_expected_return << "] \n";
+	std::wcout << std::boolalpha << "case: [" << m_input_string << "] [" << m_input_base << "] [" << m_expected_output_number << "] [" << m_expected_return << "] \n";
 
 	bool passed = true;
 
 	if (m_expected_output_number != output_number)
 	{
-		std::cout << "Wrong Output Number: " << m_expected_output_number << " != " << output_number << "\n";
+		std::wcout << "Wrong Output Number: " << output_number << " != " << m_expected_output_number << "\n";
 		passed = false;
 	}
 
 	if (m_expected_return != return_value)
 	{
-		std::cout << "Wrong Return Value: " << m_expected_return << " != " << return_value << "\n";
+		std::wcout << std::boolalpha << "Wrong Return Value: " << return_value << " != " << m_expected_return << "\n";
 		passed = false;
 	}
 
-	std::cout << "\n" << (passed ? "pass" : "FAIL");
-	std::cout << std::endl;
+	std::wcout << "\n" << (passed ? "pass" : "FAIL") << "\n";
+	std::wcout << std::endl;
 }
