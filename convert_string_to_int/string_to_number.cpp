@@ -23,7 +23,27 @@ bool character_to_number(number_type& number, wchar_t c)
 	return false;
 }
 
+bool overflow_safe_add_positive(number_type& out, number_type a, number_type b)
+{
+	// not designed to handle negative conditions
+	if (a < 0 || b < 0)
+	{
+		return false;
+	}
 
+	// ensure that there is enough space for the type to exist
+	if (std::numeric_limits<number_type>::max() - a >= b)
+	{
+		out = a + b;
+		return true;
+	}
+
+	return false;
+}
+
+
+// Choosing the philosophy of being absolutely correct over efficiency
+// It's possible to optimize by avoiding edge cases
 bool string_to_number(number_type& number, const std::wstring& s, unsigned char base)
 {
 	// potentially could just string compare on the maximum or minimum value and see if the string is greater than min or max string return (but this would need to be base specific) (possibly easier than overflow return).
@@ -43,17 +63,25 @@ bool string_to_number(number_type& number, const std::wstring& s, unsigned char 
 		return false;
 	}
 
-
 	// loop backwards over the letters converting them to the base
 	number_type position_base_multiplier = 1;
 	number_type total = 0;
 
 	bool is_signed = s[0] == L'-';
+
+	if (s.length() == 1 && is_signed)
+	{
+		return false;
+	}
+
 	int boundary = is_signed ? 1 : 0;
 
-	for (int i = s.length() - 1; i >= boundary; i--)
+	size_t current_index = s.length();
+
+	while(current_index > boundary)
 	{
-		wchar_t c = s[i];
+		current_index--;
+		wchar_t c = s[current_index];
 
 		number_type position_number;
 
@@ -69,10 +97,16 @@ bool string_to_number(number_type& number, const std::wstring& s, unsigned char 
 			return false;
 		}
 
-		total += position_number * position_base_multiplier;
+		// TODO: check for overflow
+		number_type place_value = position_number * position_base_multiplier;
+
+		if (!overflow_safe_add_positive(total, total, place_value))
+		{
+			return false;
+		}
 
 		// not needed on the last iteration (no need to fail on potential overflow)
-		if (i != boundary)
+		if (current_index != boundary)
 		{
 			// TODO: check for overflow 
 			position_base_multiplier *= base;

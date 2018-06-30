@@ -1,7 +1,7 @@
 #pragma once
 
 
-typedef int number_type;
+typedef char number_type;
 
 const unsigned char max_base = 36;
 
