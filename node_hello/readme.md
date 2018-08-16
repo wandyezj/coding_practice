@@ -1,16 +1,19 @@
 # Commands
 
-Compile the files
+Compile the files (tsconfig.json) (compiles .ts to javascript) 
 > tsc
 
 Run the files
 > node ./out/index.js
 
-Create webpack off of webpack.config.json
+Create webpack (webpack.config.json) (create one file that can be run verses being split into multiple files)
 > npx webpack
 
 Run webpacked file
 > node ./out/dist/main.js
+
+Run build and run command
+> npm run build
 
 # Installed Modules
 

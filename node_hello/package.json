@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "run": "tsc && webpack && node ./out/dist/main.js "
+    "build": "tsc && webpack && node ./out/dist/main.js arg1 arg2 arg3"
   },
   "author": "",
   "license": "ISC",
