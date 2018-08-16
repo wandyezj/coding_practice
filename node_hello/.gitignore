@@ -1,0 +1,4 @@
+# ignore output and modules
+/node_modules/*
+/out/*
+/dist/*

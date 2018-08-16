@@ -2,19 +2,20 @@
   "name": "node_hello",
   "version": "1.0.0",
   "description": "description",
-  "main": "index.js",
+  "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "run" : "tsc && node ./out/index.js"
+    "run": "tsc && webpack && node ./out/dist/main.js "
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "ts-node": "^7.0.1"
+    "ts-node": "^7.0.1",
+    "webpack": "^4.16.5",
+    "webpack-cli": "^3.1.0"
   },
   "dependencies": {
     "@types/node": "^10.7.1",
     "node": "^10.8.0"
   }
-
 }
