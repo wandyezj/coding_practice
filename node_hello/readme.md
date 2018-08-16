@@ -9,6 +9,9 @@ Run the files
 Create webpack off of webpack.config.json
 > npx webpack
 
+Run webpacked file
+> node ./out/dist/main.js
+
 # Installed Modules
 
 [node types](https://www.npmjs.com/package/@types/node)
@@ -24,3 +27,8 @@ Create webpack off of webpack.config.json
     > npm install -g typescript
 
 [typescript compiler](https://www.npmjs.com/package/tsc-init)
+
+# References
+
+[Webpack](https://jlongster.com/Backend-Apps-with-Webpack--Part-I)
+The target in the webpack config must be node in order to use node modules
