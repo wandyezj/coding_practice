@@ -89,18 +89,27 @@ def print_dictionary_key_values(d):
 
 # link ordered letters to words
 
-# {letter: [{subletters}, count hits]}
+# {letter: [{subletters}, [words]}
 # hits is the number of words that end with that letter
 # then search for sets of continuous strings of hits
 
 # create tree of words to fit together
 
 words = list(word_map)
-words.sort()
-print(words[: 10])
+#words.sort()
+#print(words[: 10])
 
-#for key in word_map:
-    
+word_tree = {}
+
+for word in words:
+
+    current_root = word_tree
+    for c in word:
+
+        if not c in current_root:
+
+
+    # add word to the current root
 
 
 '''
