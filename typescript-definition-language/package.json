@@ -4,10 +4,11 @@
   "description": "The goal: be able to define APIs in typescript and use these definitions to generate stubs for another language.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "readmepdf": "%CD%/node_modules/.bin/markdown-pdf.cmd %CD%/README.md --out %CD%/out/README.pdf"
   },
   "author": "",
-  "license": "ISC",
+  "license": "UNLICENSED",
   "dependencies": {
     "@types/node": "^10.11.0",
     "fs-extra": "^7.0.0",
