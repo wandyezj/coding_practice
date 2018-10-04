@@ -16,5 +16,7 @@
   "directories": {
     "test": "test"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "markdown-pdf": "^9.0.0"
+  }
 }
