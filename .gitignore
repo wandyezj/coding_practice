@@ -5,3 +5,4 @@
 *.vcxproj.user
 */x64/*
 x64/*
+*/__pycache__/*

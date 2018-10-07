@@ -2,68 +2,25 @@
 import os
 import string
 
-print(__file__)
-
-print(os.path.basename(__file__))
-
+#helper functions no namespace required
+import search_helpers as search_helpers
 
 
-print(os.path.dirname(__file__))
 
-data_source_path = os.path.join(os.path.dirname(__file__), '..', 'data')
+word_file_name = search_helpers.FILE_WORDS_TEST
 
-print(data_source_path)
-
-words_real = "scrabble_words_and_definitions.txt"
-words_test = "katamari_test_words.txt"
-
-word_file_name = words_real
-
-data_file_path = os.path.join(data_source_path, word_file_name)
+data_file_path = search_helpers.get_data_file_path(word_file_name)
 
 print(data_file_path)
 
 
-def map_words_definitions(file_path):
-
-    f = open(file_path)
-
-    # skip header
-    f.readline()
     
-    word_definitions = {}
-    for line in f:
-        l = line.strip()
-
-        if l == '':
-            continue
-
-        word, definition = line.split('\t')
-
-        #word = word.tolower()
-        word_definitions[word] = definition
-
-    f.close()
-
-    return word_definitions
-        
-    
-def print_dictionary(d):
-    for key, value in d.items():
-        print(key)
-        print(value)
-
-
-def sort_word(word):
-    letters = list(word)
-    letters.sort()
-    return "".join(letters)
 
 #print(sort_word("cba"))
 
 # get only the words
 
-word_definitions = map_words_definitions(data_file_path)
+word_definitions = search_helpers.map_words_definitions(data_file_path)
 
 # sort words into lengths
 
@@ -78,10 +35,9 @@ for word in word_definitions:
 word_map = {}
 
 for word in words:
-    key = sort_word(word)
+    key = search_helpers.sort_word(word)
     value = word
 
-    
     if not key in word_map:
         word_map[key] = []
 
@@ -90,6 +46,8 @@ for word in words:
 def print_dictionary_key_values(d):
     for key in d:
         print(key, d[key])
+
+
 
 
 # link ordered letters to words
@@ -105,33 +63,33 @@ words = list(word_map.keys())
 #print(words[: 10])
 
 
-KEY_WORDS="words" # all the actual words that end in the node
-KEY_HITS="hits" # number of actual words that passed this node to go the root
+KEY_HITS="hits" # number of actual words that consider this their leaf node.
 
 #technically hits should be the count of all words
-word_tree = {KEY_WORDS:[], KEY_HITS:-1}
+word_tree = { KEY_HITS: len(words)}
 
-
+# unfortunantly this will destroy memory worst case 26 ^ (max word length)
 # these are the sorted words
 for word in words:
 
     current_root = word_tree
     leaf_words = word_map[word]
 
+    # need to rotate the word to get every combination
+    for word_permutation in search_helpers.unique_permutations(word):
 
-    # go through each sorted letter in the word
-    # add the chain of letters until the end
-    for letter in word:
+        # go through each sorted letter in the word
+        # add the chain of letters until the end
+        for letter in word_permutation:
 
-        if not letter in current_root:
-            # hits is the number of words tha pass this node
-            # words are root words that end on this node
-            current_root[letter] = {KEY_HITS:0, KEY_WORDS:[]}
-            
-        current_root[letter][KEY_HITS] += len(leaf_words)
-        current_root = current_root[letter]
+            if not letter in current_root:
+                # hits is the number of words tha pass this node
+                # words are root words that end on this node
+                current_root[letter] = {KEY_HITS:0}
 
-    current_root[KEY_WORDS].extend(leaf_words)
+            current_root = current_root[letter]
+
+        current_root[KEY_HITS] += 1
 
 
 print("Word Tree: Complete")
@@ -152,12 +110,14 @@ print_word_tree(word_tree, 0)
 # link through paths created in the word tree find the longest path
 # recursive
 
+# n
+
 def longest_chain(tree, chain):
 
-    node_words = tree[KEY_WORDS]
+    node_hits = tree[KEY_HITS]
 
     # ignore root chain which is ''
-    if len(node_words) == 0 and len(chain) > 0:
+    if node_hits == 0 and len(chain) > 0:
         return ''
 
     #print("longest_chain: search sub trees")
@@ -186,13 +146,29 @@ print("Longest Chain: Complete")
 print(chain)
 
 
+'''
+Will the tree method work?
 
-    
+Possibly not, example:
+
+aab
+ab
+
+ab -> aab is a valid path
+
+longer words do not just have one path, they will always be N deep in the tree but they have C paths to get there
+where C is the combination of different letter scrambles that may be made front the word.
+
+Similarly need to search all subchains not just subchains from the root.
+
+
+
+
+'''
 
         
 
-
-    # add word to the current root
+# add word to the current root
 
 
 '''
