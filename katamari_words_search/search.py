@@ -1,6 +1,6 @@
 
 import os
-
+import string
 
 print(__file__)
 
@@ -14,7 +14,12 @@ data_source_path = os.path.join(os.path.dirname(__file__), '..', 'data')
 
 print(data_source_path)
 
-data_file_path = os.path.join(data_source_path, "scrabble_words_and_definitions.txt")
+words_real = "scrabble_words_and_definitions.txt"
+words_test = "katamari_test_words.txt"
+
+word_file_name = words_real
+
+data_file_path = os.path.join(data_source_path, word_file_name)
 
 print(data_file_path)
 
@@ -95,18 +100,96 @@ def print_dictionary_key_values(d):
 
 # create tree of words to fit together
 
-words = list(word_map)
+words = list(word_map.keys())
 #words.sort()
 #print(words[: 10])
 
-word_tree = {}
 
+KEY_WORDS="words" # all the actual words that end in the node
+KEY_HITS="hits" # number of actual words that passed this node to go the root
+
+#technically hits should be the count of all words
+word_tree = {KEY_WORDS:[], KEY_HITS:-1}
+
+
+# these are the sorted words
 for word in words:
 
     current_root = word_tree
-    for c in word:
+    leaf_words = word_map[word]
 
-        if not c in current_root:
+
+    # go through each sorted letter in the word
+    # add the chain of letters until the end
+    for letter in word:
+
+        if not letter in current_root:
+            # hits is the number of words tha pass this node
+            # words are root words that end on this node
+            current_root[letter] = {KEY_HITS:0, KEY_WORDS:[]}
+            
+        current_root[letter][KEY_HITS] += len(leaf_words)
+        current_root = current_root[letter]
+
+    current_root[KEY_WORDS].extend(leaf_words)
+
+
+print("Word Tree: Complete")
+#print(word_tree)
+
+# need to be able to nicely print the tree
+
+def print_word_tree(tree, level):
+    for letter in string.ascii_lowercase:
+
+        if letter in tree:
+            #print('\t'*level, letter)
+            print_word_tree(tree[letter], level + 1)
+
+
+print_word_tree(word_tree, 0)
+
+# link through paths created in the word tree find the longest path
+# recursive
+
+def longest_chain(tree, chain):
+
+    node_words = tree[KEY_WORDS]
+
+    # ignore root chain which is ''
+    if len(node_words) == 0 and len(chain) > 0:
+        return ''
+
+    #print("longest_chain: search sub trees")
+    longest_sub_tree_chain = chain
+ 
+    for letter in string.ascii_lowercase:
+        #print(letter)
+        if letter in tree:
+            #print("Found:", letter)
+            sub_tree = tree[letter]
+
+            sub_tree_chain = longest_chain(sub_tree, chain + letter)
+            
+            #print(sub_tree_chain)
+
+            if len(sub_tree_chain) > len(longest_sub_tree_chain):
+                longest_sub_tree_chain = sub_tree_chain
+
+
+    return longest_sub_tree_chain
+
+
+print("Longest Chain: Start")
+chain = longest_chain(word_tree, '')
+print("Longest Chain: Complete")
+print(chain)
+
+
+
+    
+
+        
 
 
     # add word to the current root
