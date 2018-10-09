@@ -1,0 +1,7 @@
+{
+    "cSpell.words": [
+        "readonly"
+    ],
+    "tslint.configFile": "tslint.json",
+    "tslint.enable": true,
+}

@@ -175,6 +175,12 @@ Each test will demonstrate a specific piece of functionality thus also serving a
 Updating tests is done by running the reader and write pipeline on the specified *.d.ts file.
 
 
+## Technical Solutions
+
+* ts-lint
+    * Does this work with declaration files?
+*
+
 ## Implementation Plan
 
 The initial implementation:

@@ -8,13 +8,13 @@ declare interface interface_x {
 }
 
 /**
- * Documentation class_x
+ * Documentation class_y
  * @name hi
  * @namespace hello
  * @beta
  * @internal
  */
-declare class class_x {
+declare class class_y {
     /**
      * Documentation property_readonly_number
      */
