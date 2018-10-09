@@ -3,19 +3,58 @@
 The goal: be able to define APIs in typescript and use these definitions to generate stubs for another language.
 
 All code will be written in typescript and executed with [ts-node](https://www.npmjs.com/package/ts-node)
-This is to keep things consistent and 
+This is to keep things consistent and maintainable.
 
 ## Goals
 
-* define an API once in a typescript .d.ts file and have that API be reflected in multiple languages.
-* Document once in the .d.ts file and have that documentation be reflected in the multiple languages. 
-* provide support for specific design patterns that enable common functionality.
+### Language Reflection
+
+APIs are defined once and reflected in multiple languages.
+
+* APIs contracts are defined once in a typescript definition language .d.ts file those contracts are reflected in multiple languages.
+* API contracts defined in other languages may be automatically translated to typescript definition language .d.ts files to onboard to the new pipeline.
+
+### Simple Definition
+
+There is one correct way to define API contracts that requires minimal input from developers.
+
+* Expected output from definitions is intuitive and obvious.
+* Common design patterns are supported to enable common functionality.
     * events
-    * checking if an API or a set of APIs are supported.
-* Enable automatic API design guidance to avoid common developer pitfalls.
-    * Do not allow two functions with the same name except that one ends in an s as this can be confusing and result in bugs that waste developers time.
-    * Enforce common standard naming conventions to make things less confusing for API consumers.
-    * Every SetX must be paired with a GetX for convenience and testability (it's ok to have a readonly GetX without a SetX)
+    * checking if an API (or a Set of APIs) is supported.
+
+
+### Automatic Documentation
+
+Documentation should be part of the API definition, including examples.
+
+* Minimize the amount of boilerplate that developers need to write for documentation.
+* Provide easy ways for developers to give examples of API usage.
+* Automatically generate end used documentation.
+* Allow this documentation to be reflected across languages.
+
+### Design Guidance
+
+Defining easy to consume APIs is challenging, allow automatic design guidance to avoid common pitfalls.
+
+* Take experts experience and encode it to make it available to everyone.
+* Enforce common standard naming conventions to make things less confusing for API consumers.
+
+Example Patterns:
+* Every SetX must be paired with a GetX for convenience and testability (it's ok to have a readonly GetX without a SetX)
+* Do not allow two functions with nearly the same name except that one ends in an s, as this can be confusing and result in bugs that waste developers time.
+
+### Testing Stubs
+
+Provide support for automatic test stub generation.
+
+* Tests are the definition of the API contract.
+* Tests are documentation of the API contract.
+* Tests are the enforcement of the API contract.
+* Tests are ideally defined once and translated to other languages allowing each implementation to have the same test coverage.
+
+### Maintainability
+
 * Detect changes in API surface.
 * Provide support for marking APIs as:
     * Public
@@ -26,10 +65,6 @@ This is to keep things consistent and
         * API is in preview and subject to change or complete removal.
     * Deprecated
         * API is slated to be removed.
-* Provide support for automatic test stub generation
-    * ideally tests would be defined as part of the API contract and arguably these examples should be part of the documentation, although this may be difficult for some APIs that require state information.
-    * Automatic translation of test examples to other languages.
-    * This would allow tests to be defined once and translated to work on top of the other languages allowing each implementation to have the same test coverage.
 
 
 ## Existing Systems
@@ -42,11 +77,23 @@ This is to keep things consistent and
 * [tslint](https://palantir.github.io/tslint/)
     * Enables writing of custom rules to check typescript code and provides highlighting in VS Code.
 
+* [Typescript Compiler Architecture](https://github.com/Microsoft/TypeScript/wiki/Architectural-Overview)
+
+* [Typescript Extracting JsDoc](https://github.com/Microsoft/TypeScript/wiki/Using-the-Compiler-API)
+    * See: Using the Type Checker
+
 * [Typescript Compiler API](https://github.com/Microsoft/TypeScript/wiki/Using-the-Compiler-API)
     * Access to a reader that can read the typescript files.
 
 * [ts-node](https://www.npmjs.com/package/ts-node)
     * API to parse the .d.ts file
+
+* [TypeDoc](https://github.com/TypeStrong/typedoc)
+    * Documentation generator for TypeScript projects.
+
+## General Project Reference
+
+*[Enabling ts-node debugging](https://medium.com/@dupski/debug-typescript-in-vs-code-without-compiling-using-ts-node-9d1f4f9a94a)
 
 ## General Layout
 
@@ -111,9 +158,8 @@ How are the specific declarations converted to language specific stubs?
     * The full name serves as a unique identifier for this API.
         > Example: namespace.class.member
     * It is invalid for a full name to be declared more that once.
-* types for arguments and return types.
+* strong types for arguments and return types.
 * Documentation Comments
-* 
 
 
 ## Testing and verification
@@ -139,9 +185,4 @@ The initial implementation:
 Refining Implementation:
 
 > Focus on better refining the *.api.json and *.d.ts file to capture desireable specifications for an API in any language.
-
-
-
-
-
 
