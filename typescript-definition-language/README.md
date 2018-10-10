@@ -12,7 +12,7 @@ This is to keep things consistent and maintainable.
 APIs are defined once and reflected in multiple languages.
 
 * APIs contracts are defined once in a typescript definition language .d.ts file those contracts are reflected in multiple languages.
-* API contracts defined in other languages may be automatically translated to typescript definition language .d.ts files to onboard to the new pipeline.
+* API contracts defined in other languages may be translated (by writing a custom reader for the language) to the typescript definition language .d.ts files to onboard to the new pipeline.
 
 ### Simple Definition
 
@@ -38,9 +38,9 @@ Documentation should be part of the API definition, including examples.
 Defining easy to consume APIs is challenging, allow automatic design guidance to avoid common pitfalls.
 
 * Take experts experience and encode it to make it available to everyone.
-* Enforce common standard naming conventions to make things less confusing for API consumers.
 
 Example Patterns:
+* Common standard naming conventions to make things less confusing for API consumers.
 * Every SetX must be paired with a GetX for convenience and testability (it's ok to have a readonly GetX without a SetX)
 * Do not allow two functions with nearly the same name except that one ends in an s, as this can be confusing and result in bugs that waste developers time.
 
@@ -48,14 +48,15 @@ Example Patterns:
 
 Provide support for automatic test stub generation.
 
-* Tests are the definition of the API contract.
-* Tests are documentation of the API contract.
-* Tests are the enforcement of the API contract.
+* Allow tests to be the definition, documentation, and enforcement of the API contract.
 * Tests are ideally defined once and translated to other languages allowing each implementation to have the same test coverage.
 
 ### Maintainability
 
 * Detect changes in API surface.
+    * Allow automatic versioning
+    * Mitigate the risk of unintentional compatibility regressions.
+
 * Provide support for marking APIs as:
     * Public
         * All APIs are public by default.
@@ -99,31 +100,33 @@ Provide support for automatic test stub generation.
 
 Typescript declaration files *.d.ts will be used to mark up the API definition.
 
-The API definition will be used to output stubs for other languages.
+The API definition will be used to generate API description *.json files which will be consumed to output stubs for other languages.
 
 Ideally a single file contains a single declaration.
 
 ## Overall flow
 
-declaration file --[definition reader]-> API description *.api.json --[language writer]-> language specific stubs
+**API Declaration File** --[**Definition Reader**]-> **Standard API Description JSON** --[**Language Writer**]-> **language specific stubs**
 
-The heart of the flow is the API description json file format which fully describes APIs.
+The heart of the flow is the **Standard API Description JSON** file format which fully describes APIs.
 
-* Various definition readers can be written to read various API description languages and output API description json.
-* Various language writers can be written to read the API description json and output language specific stubs.
+* **Definition Readers** can be written to read different **API Declaration File** formats and output **Standard API Description JSON**.
+* **Language Writers** can be written to read the **Standard API Description JSON** and output different language specific stubs.
 
-The standard *.api.json format allows:
+The **Standard API Description JSON** format allows:
 
-* A single declaration file can be used to define stubs in multiple languages.
-* API definitions to be translated between definition languages by building various definition readers and definition writers.
-* The definition reader to determine how the definition file is translated to the API description *.api.json file.
-* The language writer to determine how the API description *.api.json is translated to language specific stubs.
+* A single **API Declaration File** can be used to define stubs in multiple languages.
+* **API Declaration File** formats to be translated to different **API Declaration File** formats by building specific **Definition Readers** and **Definition Writers**.
+* The **Definition Reader** to determine how the definition file is translated to the **Standard API Description JSON** file.
+* The **Language Writer** to determine how the **Standard API Description JSON** is translated to language specific stubs.
 
 The goals are:
-* All other specification languages are translated to the standard *.d.ts format. 
-* There are standard writers for each language.
+* All other specification languages are translated to a **Standard API Declaration Format**.
+    * Via standard **Definition Readers** to translate **API Declaration File**s to **Standard API Description JSON**
+    * This makes it easier for everyone to understand the structure of the API.
+* There are standard **Definition Readers** for each language.
 
-The accomplishment of these two goals will ensure that it is obvious how standard APIs are translated to the human readers and writers of the *.d.ts files. Standard writers will produce standard APIs across languages that can follow the language specific conventions and are easy to pick up or switch between languages.
+The accomplishment of these two goals will ensure that it is obvious how standard APIs are translated to developers reading and writing of the **Standard API Declaration Format** files. Standard writers will produce standard APIs across languages that can follow the language specific conventions and are easy to pick up or switch between languages.
 
 ## Strict Reader and Writer format
 
@@ -135,21 +138,15 @@ Definition of how readers and writer are names and used.
 
 
 
-## Strict Declarations
-What is supported in declarations will be strict.
-
-Only what is positively supported will be allowed, any deviation will result in errors.
 
 
 
-### Supported Declarations
+## **Standard API Description JSON** file format
 
-What specific declarations are supported?
+* Have the extension .api.json
+* Contains entities at the most basic level, have one per file.
 
-How are the specific declarations converted to language specific stubs?
-
-* interface
-* class
+Entity files will be reassembled to produce the overall API files at the highest level (the level is language dependent)
 
 ### Required Data from Declarations
 
@@ -162,24 +159,68 @@ How are the specific declarations converted to language specific stubs?
 * Documentation Comments
 
 
+## **Standard API Declaration Format**
+
+The **Standard API Declaration Format** will use the typescript declaration *.d.ts file format with some additions.
+
+* Stronger typing that javascript typing will be added to support strongly typed languages.
+    * It's generally valid to go from more strict to less strict typing.
+    * This is to help make developer intentions clear.
+
+### Strict Declarations
+What is supported in declarations will be strict.
+
+Only what is positively supported will be allowed, any deviation will result in errors.
+
+### Supported Declarations
+
+What specific declarations are supported?
+
+How are the specific declarations converted to language specific stubs?
+
+* namespace
+* interface
+* class
+* property
+* function
+
+
 ## Testing and verification
 
 There are two things to test: readers and writers.
 
-Each test will consist of the *.d.ts file the *.api.json file, and the output file in the expected language.
+### Testing Overview
 
-A simple text compare with the previous output of the *.d.ts file is sufficient to see that the test passes.
+Since all readers and writers must be deterministic a simple test setup of ensuring a specific input file produce an expected output file is sufficient for verification.
 
-Each test will demonstrate a specific piece of functionality thus also serving as system documentation.
+Each individual test will demonstrate a specific piece of functionality, thus also serving as system documentation.
 
-Updating tests is done by running the reader and write pipeline on the specified *.d.ts file.
+Updating tests is done by updating the input and expected output file.
+
+Any scenarios that is not positively supported (has a test for it) should result in failure, in this case the output is an error code from the reader and writer with a message saying specifically what is unsupported.
+
+Understanding test failures is as easy as using a text diffing tool on the output and expected output.
+
+To simplify looking at multiple test failures output and expected output files will be named the same but placed in directories next to each other (this allows folder compares).
+
+### Testing Readers
+
+* Input: an API Declaration file
+* Output: the **Standard API Description JSON**
+* Verification: check that the output exactly matches the expected output.
+
+### Testing Writers
+
+* Input: **Standard API Description JSON**
+* Output: the language specific stubs.
+* Verification: check that the output exactly matches the expected output.
 
 
 ## Technical Solutions
 
 * ts-lint
     * Does this work with declaration files?
-*
+* typescript compiler
 
 ## Implementation Plan
 
