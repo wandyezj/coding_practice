@@ -1,7 +1,11 @@
 
+export interface metadata {
+    [key: string]: string;
+}
+
 export interface entity {
     name: string;
-    documentation: string;
-    //metadata: string[];
-    //type: "class" | "method" | "function" | "property"
+    documentation?: string;
+    metadata?: metadata;
+    type?: "namespace" | "interface" | "class" | "method" | "function" | "property"; 
 }
