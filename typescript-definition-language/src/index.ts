@@ -9,7 +9,7 @@ import {parseNamespace} from "./parseNamespace";
 
 // Hard coded
 // Note: slashes must be / not \ as this is what is normalized.
-const metadata_file = "R:/coding_practice/typescript-definition-language/test/abstract.d.ts";
+const metadata_file = "R:/coding_practice/typescript-definition-language/test/interface_x.d.ts";
 const metadata_files = [
     metadata_file,
 ];

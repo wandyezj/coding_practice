@@ -2,14 +2,22 @@ import * as typescript from "typescript";
 import {parseModifiers} from "./parseModifiers";
 import {programInfo} from "./programInfo";
 import { entity } from "./entity";
+import {parseDocumentation, documentation} from "./parseDocumentation";
 
 export function parseInterface(info: programInfo, node: typescript.InterfaceDeclaration): entity[] {
-    const name: string = node.name.escapedText.toString();
+    const node_identifier: typescript.Identifier = node.name;
+    const name: string = node_identifier.escapedText.toString();
     console.log(`Found Interface: [${name}]`);
+
+    // Documentation
+    const docs: documentation = parseDocumentation(info, node_identifier);
+    console.log(docs);
 
     // dealing with modifiers.
     parseModifiers(info, node.modifiers);
 
+
+    
     // console.log(node.modifiers);
     // console.log(x.name);
     // console.log(x.name.escapedText);

@@ -1,6 +1,6 @@
 
 export interface metadata {
-    [key: string]: string;
+    [key: string]: string | undefined;
 }
 
 export interface entity {
