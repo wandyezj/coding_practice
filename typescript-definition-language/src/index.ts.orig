@@ -11,9 +11,12 @@ console.log("---BEGIN---\n");
 
 // Hard coded
 // Note: slashes must be / not \ as this is what is normalized.
+<<<<<<< HEAD
 // const metadata_file = "C:/Users/geren/Desktop/coding_practice/typescript-definition-language/test/abstract.d.ts";
-// const metadata_file = "C:/Users/geren/Desktop/coding_practice/typescript-definition-language/test/function_test.d.ts";
-const metadata_file = "C:/Users/geren/Desktop/coding_practice/typescript-definition-language/test/class_test.d.ts";
+const metadata_file = "C:/Users/geren/Desktop/coding_practice/typescript-definition-language/test/function_test.d.ts";
+=======
+const metadata_file = "R:/coding_practice/typescript-definition-language/test/interface_x.d.ts";
+>>>>>>> 23843cbf5e1afeb1cebe8eb9d9451e184323e7c1
 const metadata_files = [
     metadata_file,
 ];
