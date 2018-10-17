@@ -10,7 +10,7 @@ export interface documentation {
     jsDocs: JsDocs;
 }
 
-export function parseDocumentation(info: programInfo, node_identifier: typescript.Identifier): documentation {
+export function parseDocumentation(info: programInfo, node_identifier: typescript.Identifier, entity?: Entity): documentation {
     const docs: documentation = { documentation: "", jsDocs: {} };
 
     if (!isUndefined(node_identifier)) {
@@ -25,6 +25,11 @@ export function parseDocumentation(info: programInfo, node_identifier: typescrip
                 docs.jsDocs[tag.name] = tag.text;
             });
         }
+    }
+    
+    if (entity) {
+        entity.documentation = docs.documentation;
+        entity.jsDocs = docs.jsDocs
     }
 
     return docs;

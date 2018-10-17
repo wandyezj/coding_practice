@@ -1,16 +1,14 @@
 import * as ts from "typescript";
 import { programInfo } from "./programInfo";
-import { Entity, FuncParameter } from "./entity";
-import { parseDocumentation, documentation } from "./parseDocumentation";
+import { Entity } from "./entity";
+import { parseDocumentation } from "./parseDocumentation";
 
 export function parseFunction(info: programInfo, node: ts.FunctionDeclaration): Entity[] {
     const node_identifier: ts.Identifier = node.name!;
     let entity: Entity = { name: node_identifier.escapedText.toString(), type: 'function', funcParameters: [] };
 
     // Documentation
-    let docs: documentation = parseDocumentation(info, node_identifier);
-    entity.documentation = docs.documentation;
-    entity.jsDocs = docs.jsDocs;
+    parseDocumentation(info, node_identifier, entity);
 
     // Parameters
     let symbol: ts.Symbol = info.checker.getSymbolAtLocation(node_identifier)!;

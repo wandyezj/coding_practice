@@ -1,5 +1,5 @@
 import * as ts from "typescript";
-import { Entity, ClassMember } from "./entity";
+import { Entity } from "./entity";
 import { programInfo } from "./programInfo";
 import { parseDocumentation, documentation } from "./parseDocumentation";
 
@@ -8,9 +8,7 @@ export function parseClass(info: programInfo, node: ts.ClassDeclaration): Entity
     let entity: Entity = { name: node_identifier.escapedText.toString(), type: 'class', classMembers: [] };
 
     // Documentation
-    let docs: documentation = parseDocumentation(info, node_identifier);
-    entity.documentation = docs.documentation;
-    entity.jsDocs = docs.jsDocs;
+    parseDocumentation(info, node_identifier, entity);
 
     // Class members
     let symbol: ts.Symbol = info.checker.getSymbolAtLocation(node_identifier)!;

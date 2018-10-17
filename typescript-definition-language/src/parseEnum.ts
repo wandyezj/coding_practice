@@ -1,23 +1,35 @@
 import * as ts from "typescript";
-import { Entity, EnumMember } from "./entity";
+import { Entity } from "./entity";
 import { programInfo } from "./programInfo";
-import { parseDocumentation, documentation } from "./parseDocumentation";
+import { parseDocumentation } from "./parseDocumentation";
 
 export function parseEnum(info: programInfo, node: ts.EnumDeclaration): Entity[] {
     const node_identifier: ts.Identifier = node.name!;
-    let entity: Entity = { name: node_identifier.escapedText.toString(), type: 'enum', enumMembers: [] };
+    let entities: Entity[] = [];
+    let enumEntity: Entity = { name: node_identifier.escapedText.toString(), type: 'enum', enumMembers: [] };
 
     // Documentation
-    let docs: documentation = parseDocumentation(info, node_identifier);
-    entity.documentation = docs.documentation;
-    entity.jsDocs = docs.jsDocs;
+    parseDocumentation(info, node_identifier, enumEntity);
 
-    // Enum members
+    // Parse enum members and build enumEntity
     node.members.forEach((member: ts.EnumMember) => {
+        entities.push(parseEnumMembers(member, info));
+
         let enumName = member.name.getText();
         let enumVal = member.initializer ? member.initializer.getText() : undefined;
-        entity.enumMembers!.push({ [enumName]: enumVal });
+        enumEntity.enumMembers!.push({ [enumName]: enumVal });
     });
 
-    return [entity];
+    entities.unshift(enumEntity);
+
+    return entities;
+}
+
+function parseEnumMembers(node: ts.EnumMember, info: programInfo): Entity {
+    let entity: Entity = { name: node.name.getText() };
+
+    // Documentation
+    parseDocumentation(info, <ts.Identifier>node.name, entity);
+
+    return entity;
 }

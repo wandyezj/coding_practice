@@ -79,4 +79,7 @@ statements.forEach(x => {
     parsed_entities.forEach(e => entities.push(e));
 });
 
-entities.forEach(entity => console.log(entity));
+entities.forEach(entity => {
+    console.log(entity)
+    console.log();
+});

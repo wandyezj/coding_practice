@@ -13,7 +13,7 @@ declare enum EnumTest {
     EnumValDefaultTest,
 
     /**
-     * EnumValNumberTest Documentation
+     *
      * @param 
      * @EnumValNumberTestTag 
      */
