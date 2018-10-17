@@ -1,10 +1,10 @@
 import * as typescript from "typescript";
-import {parseModifiers} from "./parseModifiers";
-import {programInfo} from "./programInfo";
-import { entity } from "./entity";
-import {parseDocumentation, documentation} from "./parseDocumentation";
+import { parseModifiers } from "./parseModifiers";
+import { programInfo } from "./programInfo";
+import { Entity } from "./entity";
+import { parseDocumentation, documentation } from "./parseDocumentation";
 
-export function parseInterface(info: programInfo, node: typescript.InterfaceDeclaration): entity[] {
+export function parseInterface(info: programInfo, node: typescript.InterfaceDeclaration): Entity[] {
     const node_identifier: typescript.Identifier = node.name;
     const name: string = node_identifier.escapedText.toString();
     console.log(`Found Interface: [${name}]`);
@@ -17,12 +17,12 @@ export function parseInterface(info: programInfo, node: typescript.InterfaceDecl
     parseModifiers(info, node.modifiers);
 
 
-    
+
     // console.log(node.modifiers);
     // console.log(x.name);
     // console.log(x.name.escapedText);
 
     console.log(node.members);
 
-    return [{name:name}]
+    return [{ name: name }]
 }

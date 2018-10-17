@@ -1,6 +1,6 @@
 import * as typescript from "typescript";
-import {isUndefined} from "util";
-import {programInfo} from "./programInfo";
+import { isUndefined } from "util";
+import { programInfo } from "./programInfo";
 // the only allowable modifier should be declare
 
 export function parseModifiers(info: programInfo, modifiers: typescript.NodeArray<typescript.Modifier> | undefined): string[] {

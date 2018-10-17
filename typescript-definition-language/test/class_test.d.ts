@@ -7,14 +7,14 @@ declare class ClassTest {
 
     /**
      * MethodTest1 Documentation
-     * @param MethodTest1Parameter MethodTest1ParameterTest
+     * @param MethodTest1Parameter MethodTest1ParameterText
      * @MethodTest1Tag MethodTest1TagValue
      */
     MethodTest1(MethodTestParameter: number): string;
 
     /**
      * MethodTest2 Documentation
-     * @param MethodTest2Parameter MethodTest2ParameterTest
+     * @param MethodTest2Parameter MethodTest2ParameterText
      * @MethodTest2Tag MethodTest2TagValue
      */
     MethodTest2(MethodTestParameter: number): string;

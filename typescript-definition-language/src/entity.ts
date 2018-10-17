@@ -1,21 +1,26 @@
 
-export interface jsDocs {
+export interface JsDocs {
     [key: string]: string | undefined;
 }
 
-export interface funcParameter {
-    [key: string] : string;
-}
-
-export interface classMember {
+export interface FuncParameter {
     [key: string]: string;
 }
 
-export interface entity {
+export interface ClassMember {
+    [key: string]: string;
+}
+
+export interface EnumMember {
+    [key: string]: any;
+}
+
+export interface Entity {
     name: string;
     documentation?: string;
-    jsDocs?: jsDocs;
-    type?: "namespace" | "interface" | "class" | "method" | "function" | "property"; 
-    funcParameters?: funcParameter[],
-    classMembers?: classMembers[];
+    jsDocs?: JsDocs;
+    type?: "namespace" | "interface" | "class" | "method" | "function" | "property";
+    funcParameters?: FuncParameter[],
+    classMembers?: ClassMember[];
+    enumMembers?: EnumMember[];
 }
