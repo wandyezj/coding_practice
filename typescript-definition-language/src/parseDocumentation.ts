@@ -2,17 +2,17 @@
 import * as typescript from "typescript";
 import {parseModifiers} from "./parseModifiers";
 import {programInfo} from "./programInfo";
-import { entity, metadata } from "./entity";
+import { entity, jsDocs } from "./entity";
 import { isUndefined } from "util";
 
 export interface documentation {
     documentation: string;
-    metadata: metadata;
+    jsDocs: jsDocs;
 }
 
 export function parseDocumentation(info: programInfo, node_identifier: typescript.Identifier): documentation
 {
-    const docs: documentation = {documentation:"", metadata:{}};
+    const docs: documentation = {documentation:"", jsDocs:{}};
 
     if (!isUndefined(node_identifier)) {
         let symbol = info.checker.getSymbolAtLocation(node_identifier);
@@ -23,7 +23,7 @@ export function parseDocumentation(info: programInfo, node_identifier: typescrip
     
             // Can pick up the tags as part of the js doc comment
             tags.forEach(tag => {
-                docs.metadata[tag.name] = tag.text;
+                docs.jsDocs[tag.name] = tag.text;
             });
         }
     }

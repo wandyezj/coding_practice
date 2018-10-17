@@ -6,16 +6,30 @@
 declare class ClassTest {
 
     /**
-     * MethodTest Documentation
-     * @param MethodTestParameter MethodTestParameterTest
-     * @MethodTestTag MethodTestTagValue
+     * MethodTest1 Documentation
+     * @param MethodTest1Parameter MethodTest1ParameterTest
+     * @MethodTest1Tag MethodTest1TagValue
      */
-    MethodTest(MethodTestParameter: number): string;
+    MethodTest1(MethodTestParameter: number): string;
 
     /**
-     * PropertyTest Documentation
-     * @param PropertyTestParameter PropertyTestParameterText
-     * @PropertyTestTag PropertyTestTagValue
+     * MethodTest2 Documentation
+     * @param MethodTest2Parameter MethodTest2ParameterTest
+     * @MethodTest2Tag MethodTest2TagValue
      */
-    PropertyAbstract: number;
+    MethodTest2(MethodTestParameter: number): string;
+
+    /**
+     * Property1Test Documentation
+     * @param Property1TestParameter Property1TestParameterText
+     * @Property1TestTag Property1TestTagValue
+     */
+    Property1Test: number;
+
+    /**
+     * Property2Test Documentation
+     * @param Property2TestParameter Property2TestParameterText
+     * @Property2TestTag Property2TestTagValue
+     */
+    Property2Test: number;
 }

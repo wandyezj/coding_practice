@@ -30,22 +30,20 @@ const program: typescript.Program = typescript.createProgram(metadata_files, com
 const checker: typescript.TypeChecker = program.getTypeChecker();
 // limit to files that match the metadata file
 
-console.log(program.getSourceFiles().map(x => x.fileName));
-console.log();
+// console.log(program.getSourceFiles().map(x => x.fileName));
+// console.log();
 
 const source_files = program.getSourceFiles().filter(x => metadata_files.indexOf(x.fileName) >= 0);
 
 // What is contained in the source (there should be exactly one match)
 const source_file = source_files[0];
-console.log(source_file.fileName);
-console.log();
-console.log(source_file);
+// console.log(source_file.fileName);
+// console.log();
+// console.log(source_file);
 // console.log('statements:')
 // console.log(source_file.statements)
 
 const statements = source_file.statements;
-
-console.log("\n---Parsed Types---\n");
 
 const info: programInfo = {
     source_file:source_file,

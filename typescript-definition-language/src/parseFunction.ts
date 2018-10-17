@@ -1,5 +1,4 @@
 import * as ts from "typescript";
-import {parseModifiers} from "./parseModifiers";
 import {programInfo} from "./programInfo";
 import {entity, funcParameter} from "./entity";
 import {parseDocumentation, documentation} from "./parseDocumentation";
@@ -11,10 +10,11 @@ export function parseFunction(info: programInfo, node: any): entity[] {
     // Documentation
     let docs: documentation = parseDocumentation(info, node_identifier);
     entity.documentation = docs.documentation;
-    entity.metadata = docs.metadata;
+    entity.jsDocs = docs.jsDocs;
 
     // Parameters
     let symbol: ts.Symbol = info.checker.getSymbolAtLocation(node_identifier)!;
+    // info.checker.symbolToEntityName(symbol);
     let functionType = info.checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration!);
     let signatures = functionType.getCallSignatures()[0];
     signatures.getParameters().forEach(param => {
