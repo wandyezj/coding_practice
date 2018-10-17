@@ -3,8 +3,8 @@ import { Entity, ClassMember } from "./entity";
 import { programInfo } from "./programInfo";
 import { parseDocumentation, documentation } from "./parseDocumentation";
 
-export function parseClass(info: programInfo, node: any): Entity[] {
-    const node_identifier: ts.Identifier = node.name;
+export function parseClass(info: programInfo, node: ts.ClassDeclaration): Entity[] {
+    const node_identifier: ts.Identifier = node.name!;
     let entity: Entity = { name: node_identifier.escapedText.toString(), type: 'class', classMembers: [] };
 
     // Documentation
@@ -14,14 +14,12 @@ export function parseClass(info: programInfo, node: any): Entity[] {
 
     // Class members
     let symbol: ts.Symbol = info.checker.getSymbolAtLocation(node_identifier)!;
-    let members = symbol.members;
-    members!.forEach((val, key) => {
+    symbol.members!.forEach((val, key) => {
+        let methodName: string = key.toString();
         let declaration: ts.Declaration = val.getDeclarations()![0];
         let declarationType: string = ts.SyntaxKind[declaration.kind].replace('Declaration', '');
-        let classMember: ClassMember = { [val.getName()]: declarationType };
-        entity.classMembers!.push(classMember);
+        entity.classMembers!.push({ [methodName]: declarationType });
     });
 
-    // console.log(entity);
     return [entity];
 }

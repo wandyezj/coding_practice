@@ -3,25 +3,21 @@ import { Entity, EnumMember } from "./entity";
 import { programInfo } from "./programInfo";
 import { parseDocumentation, documentation } from "./parseDocumentation";
 
-export function parseEnum(info: programInfo, node: any): Entity[] {
-    const node_identifier: ts.Identifier = node.name;
-    let entity: Entity = { name: node_identifier.escapedText.toString(), type: 'class', classMembers: [] };
+export function parseEnum(info: programInfo, node: ts.EnumDeclaration): Entity[] {
+    const node_identifier: ts.Identifier = node.name!;
+    let entity: Entity = { name: node_identifier.escapedText.toString(), type: 'enum', enumMembers: [] };
 
     // Documentation
     let docs: documentation = parseDocumentation(info, node_identifier);
     entity.documentation = docs.documentation;
     entity.jsDocs = docs.jsDocs;
 
-    // Class members
-    // let symbol: ts.Symbol = info.checker.getSymbolAtLocation(node_identifier)!;
-    // let members = symbol.members;
-    // members!.forEach((val, key) => {
-    //     let declaration: ts.Declaration = val.getDeclarations()![0];
-    //     let declarationType: string = ts.SyntaxKind[declaration.kind].replace('Declaration', '');
-    //     let classMember: classMember = {[val.getName()]: declarationType};
-    //     entity.classMembers!.push(classMember);
-    // });
+    // Enum members
+    node.members.forEach((member: ts.EnumMember) => {
+        let enumName = member.name.getText();
+        let enumVal = member.initializer ? member.initializer.getText() : undefined;
+        entity.enumMembers!.push({ [enumName]: enumVal });
+    });
 
-    // console.log(entity);
     return [entity];
 }

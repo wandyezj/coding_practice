@@ -19,7 +19,7 @@ export interface Entity {
     name: string;
     documentation?: string;
     jsDocs?: JsDocs;
-    type?: "namespace" | "interface" | "class" | "method" | "function" | "property";
+    type?: 'namespace' | 'interface' | 'class' | 'method' | 'function' | 'property' | 'enum';
     funcParameters?: FuncParameter[],
     classMembers?: ClassMember[];
     enumMembers?: EnumMember[];
