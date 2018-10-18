@@ -1,24 +1,51 @@
-import * as ts from "typescript";
+import {
+  FunctionDeclaration,
+  MethodDeclaration,
+  Identifier,
+  SyntaxKind,
+  ParameterDeclaration,
+  MethodSignature,
+  ConstructorDeclaration,
+  isConstructorDeclaration,
+  TypeReferenceNode
+} from "typescript";
 import { programInfo } from "./programInfo";
 import { Entity } from "./entity";
 import { parseDocumentation } from "./parseDocumentation";
+import parseNode from "./utils/parseNode";
 
-export function parseFunction(info: programInfo, node: ts.FunctionDeclaration): Entity[] {
-    const node_identifier: ts.Identifier = node.name!;
-    let entity: Entity = { name: node_identifier.escapedText.toString(), type: 'function', funcParameters: [] };
+// Seems parsing a function and parsing a method are the exact same.
+export function parseFunction(info: programInfo, node: FunctionDeclaration | MethodDeclaration | MethodSignature | ConstructorDeclaration): Entity[] {
+    const nodeIdentifier: Identifier = <Identifier>node.name!;
+    let parsedEntities: Entity[] = [];
+
+    // Clearly hacky, rework using inheritance.
+    let kind: string = isConstructorDeclaration(node) ? 'Constructor' : SyntaxKind[node.kind];
+    let name: string = isConstructorDeclaration(node) ? 'Constructor' : nodeIdentifier.getText();
+    let type: string = isConstructorDeclaration(node) ? 'Constructor' : SyntaxKind[node.type!.kind];
+
+    // More hackyness, custom types also needs to be taken into accound for the real implementation.
+    if (node.type!.kind === SyntaxKind.TypeReference) {
+        type = (<TypeReferenceNode>node.type!).typeName.getText();
+    }
+
+    let functionEntity: Entity = { name: name, kind: kind, type: type, parameters: [] };
 
     // Documentation
-    parseDocumentation(info, node_identifier, entity);
+    parseDocumentation(info, nodeIdentifier, functionEntity);
 
     // Parameters
-    let symbol: ts.Symbol = info.checker.getSymbolAtLocation(node_identifier)!;
-    let functionType = info.checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration!);
-    let signatures = functionType.getCallSignatures()[0];
-    signatures.getParameters().forEach(param => {
-        let paramName: string = param.getName();
-        let funcType: string = info.checker.typeToString(info.checker.getTypeOfSymbolAtLocation(param, param.valueDeclaration!));
-        entity.funcParameters!.push({ [paramName]: funcType });
-    });
+    node.parameters.forEach((paramDec: ParameterDeclaration) => {
 
-    return [entity];
+        // Add parameter to current function's JSON representation
+        let paramName: string = (<Identifier>paramDec.name).getText();
+        let paramType: string = SyntaxKind[paramDec.type!.kind];
+        functionEntity.parameters!.push({ [paramName]: paramType });
+
+        // Parse the parameters individually.
+        parsedEntities = [...parsedEntities, ...parseNode(info, paramDec)];
+    }); 
+
+    parsedEntities.unshift(functionEntity);
+    return parsedEntities;
 }

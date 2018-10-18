@@ -1,28 +1,29 @@
-import * as typescript from "typescript";
-import { parseModifiers } from "./parseModifiers";
+import { InterfaceDeclaration, Identifier, SyntaxKind } from "typescript";
 import { programInfo } from "./programInfo";
 import { Entity } from "./entity";
-import { parseDocumentation, documentation } from "./parseDocumentation";
+import { parseDocumentation } from "./parseDocumentation";
+import parseNode from "./utils/parseNode";
 
-export function parseInterface(info: programInfo, node: typescript.InterfaceDeclaration): Entity[] {
-    const node_identifier: typescript.Identifier = node.name!;
-    const name: string = node_identifier.escapedText.toString();
-    console.log(`Found Interface: [${name}]`);
+export function parseInterface(info: programInfo, node: InterfaceDeclaration): Entity[] {
+    const nodeIdentifier: Identifier = node.name!;
+    let parsedEntities: Entity[] = [];
+    let intfEntity: Entity = { name: nodeIdentifier.getText(), kind: SyntaxKind[node.kind], Members: [] };
 
     // Documentation
-    const docs: documentation = parseDocumentation(info, node_identifier);
-    console.log(docs);
+    parseDocumentation(info, nodeIdentifier, intfEntity);
 
-    // dealing with modifiers.
-    parseModifiers(info, node.modifiers);
+    // Interface members
+    node.members.forEach((intfMemberDec, _) => {
 
+        // Add member to current interface's JSON representation
+        let methodName: string = (<Identifier>intfMemberDec.name).getText();
+        let interfaceMemberDecType: string = SyntaxKind[intfMemberDec.kind];
+        intfEntity.Members!.push({ [methodName]: interfaceMemberDecType });
 
+        // // Parse the members individually.
+        parsedEntities = [...parsedEntities, ...parseNode(info, intfMemberDec)];
+    });
 
-    // console.log(node.modifiers);
-    // console.log(x.name);
-    // console.log(x.name.escapedText);
-
-    console.log(node.members);
-
-    return [{ name: name }]
+    parsedEntities.unshift(intfEntity);
+    return parsedEntities;
 }

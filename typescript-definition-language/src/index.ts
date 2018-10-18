@@ -1,38 +1,35 @@
 import { Entity } from "./entity";
-import { isUndefined } from "util";
-import * as typescript from "typescript";
-import { parseClass } from "./parseClass";
-import { parseInterface } from "./parseInterface";
+import * as ts from "typescript";
 import { programInfo } from "./programInfo";
-import { parseFunction } from "./parseFunction";
-import { parseNamespace } from "./parseNamespace";
-import { parseEnum } from "./parseEnum";
+import parseNode from "./utils/parseNode";
 
 console.log("---BEGIN---\n");
 
 // Hard coded
 // Note: slashes must be / not \ as this is what is normalized.
 // const metadata_file = "C:/Users/geren/Desktop/coding_practice/typescript-definition-language/test/abstract.d.ts";
-// const metadata_file = "C:/Users/geren/Desktop/coding_practice/typescript-definition-language/test/function_test.d.ts";
-// const metadata_file = "C:/Users/geren/Desktop/coding_practice/typescript-definition-language/test/class_test.d.ts";
-const metadata_file = "C:/Users/geren/Desktop/coding_practice/typescript-definition-language/test/enum_test.d.ts";
-const metadata_files = [
-    metadata_file,
-];
+// const metadata_file = "C:/Users/geren/Desktop/coding_practice/typescript-definition-language/test/functionTest.d.ts";
+// const metadata_file = "C:/Users/geren/Desktop/coding_practice/typescript-definition-language/test/classTest.d.ts";
+// const metadata_file = "C:/Users/geren/Desktop/coding_practice/typescript-definition-language/test/enumTest.d.ts";
+// const metadata_file = "C:/Users/geren/Desktop/coding_practice/typescript-definition-language/test/interfaceTest.d.ts";
+const metadata_file = "C:/Users/geren/Desktop/coding_practice/typescript-definition-language/test/abstract.d.ts";
+const metadata_files = [metadata_file];
 
 // compile
-let compiler_options: typescript.CompilerOptions = {
-    emitDecoratorMetadata: true,
-    experimentalDecorators: true,
-    module: typescript.ModuleKind.CommonJS,
-    target: typescript.ScriptTarget.ES2015,
+let compiler_options: ts.CompilerOptions = {
+  emitDecoratorMetadata: true,
+  experimentalDecorators: true,
+  module: ts.ModuleKind.CommonJS,
+  target: ts.ScriptTarget.ES2015
 };
 
-const program: typescript.Program = typescript.createProgram(metadata_files, compiler_options);
-const checker: typescript.TypeChecker = program.getTypeChecker();
+const program: ts.Program = ts.createProgram(metadata_files, compiler_options);
+const checker: ts.TypeChecker = program.getTypeChecker();
 
 // limit to files that match the metadata file
-const source_files = program.getSourceFiles().filter(x => metadata_files.indexOf(x.fileName) >= 0);
+const source_files = program
+  .getSourceFiles()
+  .filter(x => metadata_files.indexOf(x.fileName) >= 0);
 
 // What is contained in the source (there should be exactly one match)
 const source_file = source_files[0];
@@ -41,45 +38,19 @@ const statements = source_file.statements;
 // console.log(statements)
 
 const info: programInfo = {
-    source_file: source_file,
-    program: program,
-    checker: checker
+  source_file: source_file,
+  program: program,
+  checker: checker
 };
 
-let entities: Entity[] = [];
-
 // Note: at all stages need to check for unsupported values to make sure that only the positive set is supported.
-statements.forEach(x => {
-    let parsed_entities: Entity[] = []
-
-    if (typescript.isInterfaceDeclaration(x)) {
-        console.log("\n---PARSE INTERFACE---\n");
-        parsed_entities = parseInterface(info, x);
-
-    } else if (typescript.isClassDeclaration(x)) {
-        console.log("\n---PARSE CLASS---\n");
-        parsed_entities = parseClass(info, x);
-
-    } else if (typescript.isModuleDeclaration(x)) {
-        console.log("\n---PARSE NAMESPACE---\n");
-        parsed_entities = parseNamespace(info, x);
-
-    } else if (typescript.isFunctionDeclaration(x)) {
-        console.log("\n---PARSE FUNCTION---\n");
-        parsed_entities = parseFunction(info, x);
-
-    } else if (typescript.isEnumDeclaration(x)) {
-        console.log("\n---PARSE ENUM---\n");
-        parsed_entities = parseEnum(info, x);
-
-    } else {
-        throw new TypeError("Unsupported declaration");
-    }
-
-    parsed_entities.forEach(e => entities.push(e));
+let entities: Entity[] = [];
+statements.forEach(node => {
+  let parsed_entities: Entity[] = parseNode(info, node);
+  parsed_entities.forEach(e => entities.push(e));
 });
 
 entities.forEach(entity => {
-    console.log(entity)
-    console.log();
+  console.log(entity);
+  console.log();
 });

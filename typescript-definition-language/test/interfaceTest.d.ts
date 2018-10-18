@@ -1,23 +1,31 @@
 /**
- * ClassTest Documentation
- * @param ClassTestParameter ClassTestParameterText
- * @ClassTestTag ClassTestTagValue
+ * InterfaceTest Documentation
+ * @param InterfaceTestParameter InterfaceTestParameterText
+ * @InterfaceTestTag InterfaceTestTagValue
  */
-declare class ClassTest {
+declare interface InterfaceTest {
 
     /**
      * MethodTest1 Documentation
      * @param MethodTest1Parameter MethodTest1ParameterText
      * @MethodTest1Tag MethodTest1TagValue
      */
-    MethodTest1(MethodTestParameter: number): string;
+    MethodTest1(
+        /**
+         * MethodTest1Parameter1 Documentation
+         * @param MethodTest1Parameter1Parameter MethodTest1Parameter1ParameterText
+         * @MethodTest1Parameter1Tag MethodTest1Parameter1TagValue 
+         */
+        MethodTest1Parameter1: number, 
+        MethodTest1Parameter2: boolean
+    ): void;
 
     /**
      * MethodTest2 Documentation
      * @param MethodTest2Parameter MethodTest2ParameterText
      * @MethodTest2Tag MethodTest2TagValue
      */
-    MethodTest2(MethodTestParameter: number): string;
+    MethodTest2(): boolean[];
 
     /**
      * Property1Test Documentation

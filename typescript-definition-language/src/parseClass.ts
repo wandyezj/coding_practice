@@ -1,23 +1,35 @@
-import * as ts from "typescript";
+import {
+  ClassDeclaration,
+  Identifier,
+  SyntaxKind,
+  isConstructorDeclaration
+} from "typescript";
 import { Entity } from "./entity";
 import { programInfo } from "./programInfo";
-import { parseDocumentation, documentation } from "./parseDocumentation";
+import { parseDocumentation } from "./parseDocumentation";
+import parseNode from "./utils/parseNode";
 
-export function parseClass(info: programInfo, node: ts.ClassDeclaration): Entity[] {
-    const node_identifier: ts.Identifier = node.name!;
-    let entity: Entity = { name: node_identifier.escapedText.toString(), type: 'class', classMembers: [] };
+export function parseClass(info: programInfo, node: ClassDeclaration): Entity[] {
+    const nodeIdentifier: Identifier = node.name!;
+    let parsedEntities: Entity[] = [];
+    let classEntity: Entity = { name: nodeIdentifier.getText(), kind: SyntaxKind[node.kind], Members: [] };
 
     // Documentation
-    parseDocumentation(info, node_identifier, entity);
+    parseDocumentation(info, nodeIdentifier, classEntity);
 
     // Class members
-    let symbol: ts.Symbol = info.checker.getSymbolAtLocation(node_identifier)!;
-    symbol.members!.forEach((val, key) => {
-        let methodName: string = key.toString();
-        let declaration: ts.Declaration = val.getDeclarations()![0];
-        let declarationType: string = ts.SyntaxKind[declaration.kind].replace('Declaration', '');
-        entity.classMembers!.push({ [methodName]: declarationType });
+    node.members.forEach((classMemberDec, _) => {
+
+        // Add member to current class' JSON representation
+        let methodName: string = isConstructorDeclaration(classMemberDec) ? 'Constructor' : (<Identifier>classMemberDec.name).getText();
+        let classMemberDecType: string = SyntaxKind[classMemberDec.kind];
+        classEntity.Members!.push({ [methodName]: classMemberDecType });
+
+        // // Parse the members individually.
+        parsedEntities = [...parsedEntities, ...parseNode(info, classMemberDec)];
     });
 
-    return [entity];
+    parsedEntities.unshift(classEntity);
+    return parsedEntities;
 }
+

@@ -4,4 +4,7 @@
     ],
     "tslint.configFile": "tslint.json",
     "tslint.enable": true,
+    "macros": { 
+        "commentLine": ["editor.action.commentLine", "cursorDown"],
+        "commentLineUp": ["editor.action.commentLine", "cursorUp"]},
 }

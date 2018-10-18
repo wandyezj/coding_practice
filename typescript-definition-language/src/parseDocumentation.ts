@@ -1,6 +1,4 @@
-
 import * as typescript from "typescript";
-import { parseModifiers } from "./parseModifiers";
 import { programInfo } from "./programInfo";
 import { Entity, JsDocs } from "./entity";
 import { isUndefined } from "util";
@@ -10,11 +8,11 @@ export interface documentation {
     jsDocs: JsDocs;
 }
 
-export function parseDocumentation(info: programInfo, node_identifier: typescript.Identifier, entity?: Entity): documentation {
+export function parseDocumentation(info: programInfo, nodeIdentifier: typescript.Identifier, entity?: Entity): documentation {
     const docs: documentation = { documentation: "", jsDocs: {} };
 
-    if (!isUndefined(node_identifier)) {
-        let symbol = info.checker.getSymbolAtLocation(node_identifier);
+    if (!isUndefined(nodeIdentifier)) {
+        let symbol = info.checker.getSymbolAtLocation(nodeIdentifier);
         if (symbol) {
             docs.documentation = typescript.displayPartsToString(symbol.getDocumentationComment(undefined));
 

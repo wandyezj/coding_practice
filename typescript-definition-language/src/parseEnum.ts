@@ -1,22 +1,22 @@
-import * as ts from "typescript";
+import { EnumDeclaration, Identifier, SyntaxKind, EnumMember } from "typescript";
 import { Entity } from "./entity";
 import { programInfo } from "./programInfo";
 import { parseDocumentation } from "./parseDocumentation";
 
-export function parseEnum(info: programInfo, node: ts.EnumDeclaration): Entity[] {
-    const node_identifier: ts.Identifier = node.name!;
+export function parseEnum(info: programInfo, node: EnumDeclaration): Entity[] {
+    const nodeIdentifier: Identifier = node.name!;
     let entities: Entity[] = [];
-    let enumEntity: Entity = { name: node_identifier.escapedText.toString(), type: 'enum', enumMembers: [] };
+    let enumEntity: Entity = { name: nodeIdentifier.getText(), kind: SyntaxKind[node.kind], enumMembers: [] };
 
     // Documentation
-    parseDocumentation(info, node_identifier, enumEntity);
+    parseDocumentation(info, nodeIdentifier, enumEntity);
 
     // Parse enum members and build enumEntity
-    node.members.forEach((member: ts.EnumMember) => {
+    node.members.forEach((member: EnumMember) => {
         entities.push(parseEnumMembers(member, info));
 
-        let enumName = member.name.getText();
-        let enumVal = member.initializer ? member.initializer.getText() : undefined;
+        let enumName: string = member.name.getText();
+        let enumVal: string | undefined = member.initializer ? member.initializer.getText() : undefined;
         enumEntity.enumMembers!.push({ [enumName]: enumVal });
     });
 
@@ -25,11 +25,11 @@ export function parseEnum(info: programInfo, node: ts.EnumDeclaration): Entity[]
     return entities;
 }
 
-function parseEnumMembers(node: ts.EnumMember, info: programInfo): Entity {
+function parseEnumMembers(node: EnumMember, info: programInfo): Entity {
     let entity: Entity = { name: node.name.getText() };
 
     // Documentation
-    parseDocumentation(info, <ts.Identifier>node.name, entity);
+    parseDocumentation(info, <Identifier>node.name, entity);
 
     return entity;
 }

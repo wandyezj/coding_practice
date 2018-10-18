@@ -1,7 +1,7 @@
-import * as typescript from "typescript";
+import { SourceFile, Program, TypeChecker } from "typescript";
 
 export interface programInfo {
-    source_file: typescript.SourceFile;
-    program: typescript.Program;
-    checker: typescript.TypeChecker;
+    source_file: SourceFile;
+    program: Program;
+    checker: TypeChecker;
 }
