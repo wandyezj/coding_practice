@@ -96,6 +96,8 @@ Provide support for automatic test stub generation.
 
 *[Enabling ts-node debugging](https://medium.com/@dupski/debug-typescript-in-vs-code-without-compiling-using-ts-node-9d1f4f9a94a)
 
+*[AST explorer](https://astexplorer.net)
+
 ## General Layout
 
 Typescript declaration files *.d.ts will be used to mark up the API definition.

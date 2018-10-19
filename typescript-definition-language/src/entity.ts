@@ -1,30 +1,30 @@
-export interface JsDocs {
+export interface IJsDocs {
     [key: string]: string | undefined;
 }
 
-export interface FuncParameter {
+export interface IFuncParameter {
     [key: string]: string;
 }
 
-export interface Member {
+export interface IMember {
     [key: string]: string;
 }
 
-export interface EnumMember {
+export interface IEnumMember {
     [key: string]: any;
 }
 
-export interface Entity {
+export interface IEntity {
     name: string;
     documentation?: string;
-    jsDocs?: JsDocs;
+    jsDocs?: IJsDocs;
     kind?: string;
     type?: string;
-    parameters?: FuncParameter[];
-    Members?: Member[];
-    enumMembers?: EnumMember[];
+    parameters?: IFuncParameter[];
+    Members?: IMember[];
+    enumMembers?: IEnumMember[];
     propertyType?: any;
-    methodParameters?: FuncParameter[];
+    methodParameters?: IFuncParameter[];
     inheritsFrom?: string;
     implements?: string[];
 }

@@ -82,7 +82,12 @@ export declare namespace NamespaceAbstract {
      * @returns ReturnValueAbstract Documentation
      * @TagAbstract TagAbstractValue
      */
-    function FunctionOptionalAbstract(ParameterOptionalAbstract?: boolean): ClassAbstract & undefined;
+    function FunctionOptionalAbstract(
+        /**
+         * ParameterOptionalAbstract Documentation
+         */
+        ParameterOptionalAbstract?: boolean
+    ): ClassAbstract & undefined;
 
     interface TestInterface1 extends ClassAbstract {
     }

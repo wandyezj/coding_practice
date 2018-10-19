@@ -9,7 +9,7 @@
     "pdf": "npm run clean_readme_pdf && npm run readme_pdf",
     "readme_pdf": "%CD%/node_modules/.bin/markdown-pdf.cmd %CD%/README.md --out %CD%/out/typescript-definition-language.pdf",
     "clean_readme_pdf": "DEL %CD%\\out\\*.pdf",
-    "tslint": "%CD%/node_modules/.bin/tslint --config %CD%/tslint.json %CD%/src/index.ts"
+    "tslint": "%CD%/node_modules/.bin/tslint --config %CD%/tslint.json %CD%/src/*.ts"
   },
   "author": "",
   "license": "UNLICENSED",
