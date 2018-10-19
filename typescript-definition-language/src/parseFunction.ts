@@ -8,7 +8,8 @@ import {
   ConstructorDeclaration,
   isConstructorDeclaration,
   TypeReferenceNode,
-  ArrayTypeNode
+  ArrayTypeNode,
+  IntersectionTypeNode
 } from "typescript";
 import { programInfo } from "./programInfo";
 import { Entity } from "./entity";
@@ -40,6 +41,20 @@ export function parseFunction(info: programInfo, node: FunctionDeclaration | Met
         type = funcType.kind === SyntaxKind.TypeReference ? (<TypeReferenceNode>funcType).typeName.getText() : SyntaxKind[funcType.kind];
         type += ' Array';
     }
+
+    // Necesita rehacer este tambien!
+    // Handles intersection types.
+    if (funcType.kind === SyntaxKind.IntersectionType) {
+        type = '';
+        (<IntersectionTypeNode>funcType).types.forEach(curType => {
+            if (curType.kind === SyntaxKind.TypeReference) {
+                type = type + (<TypeReferenceNode>curType).typeName.getText() + ' & ';
+            } else {
+                type = type + SyntaxKind[curType.kind] + ' & ';
+            }
+        });
+        type = type.slice(0, -3);
+    };
 
     let funcEntity: Entity = { name: name, kind: kind, type: type, parameters: [] };
 

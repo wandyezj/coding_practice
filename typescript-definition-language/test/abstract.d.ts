@@ -21,7 +21,7 @@ export declare namespace NamespaceAbstract {
          * @param ParameterAbstract ParameterAbstract Documentation
          * @TagAbstract TagAbstractValue
          */
-        MethodAbstract(ParameterAbstract: undefined): void;
+        MethodAbstract(ParameterAbstract: undefined): InterfaceAbstract;
 
         /**
          * InterfaceAbstract PropertyAbstract Documentation
@@ -41,7 +41,7 @@ export declare namespace NamespaceAbstract {
          * @param ParameterAbstract ParameterAbstract Documentation
          * @TagAbstract TagAbstractValue
          */
-        MethodAbstract(ParameterAbstract: any): InterfaceAbstract;
+        MethodAbstract(ParameterAbstract: any): Object[];
 
         /**
          * ClassAbstract PropertyAbstract Documentation
@@ -82,5 +82,8 @@ export declare namespace NamespaceAbstract {
      * @returns ReturnValueAbstract Documentation
      * @TagAbstract TagAbstractValue
      */
-    function FunctionOptionalAbstract(ParameterOptionalAbstract?: boolean): Object[];
+    function FunctionOptionalAbstract(ParameterOptionalAbstract?: boolean): ClassAbstract & undefined;
+
+    class InheritAbstract extends ClassAbstract {
+    }
 }
