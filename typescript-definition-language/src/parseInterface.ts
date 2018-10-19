@@ -24,6 +24,15 @@ export function parseInterface(info: programInfo, node: InterfaceDeclaration): E
         parsedEntities = [...parsedEntities, ...parseNode(info, intfMemberDec)];
     });
 
+    // Inheritance
+    if (node.heritageClauses) {
+        node.heritageClauses.forEach(heritageClause => {
+            let extensions: string[] = [];
+            heritageClause.types.map(intfExpression => extensions.push(intfExpression.expression.getText()));
+            intfEntity.implements = extensions;
+        });
+    }
+
     parsedEntities.unshift(intfEntity);
     return parsedEntities;
 }

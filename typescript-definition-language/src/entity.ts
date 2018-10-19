@@ -25,4 +25,6 @@ export interface Entity {
     enumMembers?: EnumMember[];
     propertyType?: any;
     methodParameters?: FuncParameter[];
+    inheritsFrom?: string;
+    implements?: string[];
 }

@@ -2,7 +2,8 @@ import {
   ClassDeclaration,
   Identifier,
   SyntaxKind,
-  isConstructorDeclaration
+  isConstructorDeclaration,
+  InterfaceDeclaration
 } from "typescript";
 import { Entity } from "./entity";
 import { programInfo } from "./programInfo";
@@ -28,6 +29,19 @@ export function parseClass(info: programInfo, node: ClassDeclaration): Entity[] 
         // // Parse the members individually.
         parsedEntities = [...parsedEntities, ...parseNode(info, classMemberDec)];
     });
+
+    // Inheritance
+    if (node.heritageClauses) {
+        node.heritageClauses.forEach(heritageClause => {
+            if (heritageClause.token === SyntaxKind.ExtendsKeyword) {
+                classEntity.inheritsFrom = heritageClause.types[0].expression.getText();
+            } else {
+                let intfs: string[] = [];
+                heritageClause.types.map(intfExpression => intfs.push(intfExpression.expression.getText()));
+                classEntity.implements = intfs;
+            }
+        });
+    }
 
     parsedEntities.unshift(classEntity);
     return parsedEntities;

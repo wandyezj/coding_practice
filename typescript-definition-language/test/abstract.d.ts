@@ -84,6 +84,12 @@ export declare namespace NamespaceAbstract {
      */
     function FunctionOptionalAbstract(ParameterOptionalAbstract?: boolean): ClassAbstract & undefined;
 
-    class InheritAbstract extends ClassAbstract {
+    interface TestInterface1 extends ClassAbstract {
+    }
+  
+    interface TestInterface2 extends TestInterface1, ClassAbstract, Object {
+    }
+
+    class InheritAbstract extends ClassAbstract implements TestInterface1, TestInterface2 {
     }
 }
