@@ -14,7 +14,8 @@ import {
       const nodeIdentifier: Identifier = <Identifier>node.name;
 
       // Super hacky, either make into function or have a super class all parsers derive from. 
-      // Don't want to copy and paste this into all parsers.
+      // Don't want to copy and paste this into all parsers. 
+      // Handles union types
       let variableType = node.type!;
       let typeTest = SyntaxKind[variableType.kind];
       if (variableType.kind === SyntaxKind.UnionType) {
@@ -24,11 +25,6 @@ import {
             typeTest += ' | ';
         });
         typeTest = typeTest.slice(0, -3);
-      }
-
-      // Hacks for array types
-      if (variableType.kind === SyntaxKind.ArrayType) {
-        typeTest = SyntaxKind[(<ArrayTypeNode>variableType).elementType.kind] + ' Array';
       }
 
       let variableEntity: Entity = { name: nodeIdentifier.getText(), kind: SyntaxKind[node.kind], type: typeTest };

@@ -74,7 +74,7 @@ export declare namespace NamespaceAbstract {
     /**
      * UnionVariableAbstract Documentation
      */
-    let UnionVariableAbstract: number | undefined | string[];
+    let UnionVariableAbstract: number | undefined;
 
     /**
      * FunctionOptionalAbstract Documentation
@@ -82,5 +82,5 @@ export declare namespace NamespaceAbstract {
      * @returns ReturnValueAbstract Documentation
      * @TagAbstract TagAbstractValue
      */
-    function FunctionOptionalAbstract(ParameterOptionalAbstract?: Object): boolean[];
+    function FunctionOptionalAbstract(ParameterOptionalAbstract?: boolean): Object[];
 }
